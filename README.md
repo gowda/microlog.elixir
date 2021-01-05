@@ -13,6 +13,16 @@ $ mix ecto.setup
 $ npm --prefix=assets install
 ```
 
+### Lint
+```bash
+$ mix credo
+```
+
+### Test
+```bash
+$ mix test
+```
+
 ### Start server
 ```bash
 $ mix phx.server
