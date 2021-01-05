@@ -1,5 +1,5 @@
 /* This file is for your main application css. */
-@import "./phoenix.css";
+@import "~bootstrap/scss/bootstrap";
 
 /* Alerts and form errors */
 .alert {
@@ -33,4 +33,13 @@
   color: #a94442;
   display: block;
   margin: -1rem 0 2rem;
+}
+
+footer {
+  background-color: #f8f9fa !important;
+}
+
+footer nav .list-group-horizontal .list-group-item, footer nav .list-group-horizontal .list-group-item + .list-group-item {
+  background-color: #f8f9fa !important;
+  border-width: 0;
 }

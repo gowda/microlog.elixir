@@ -1,6 +1,12 @@
-<h1>Sample App</h1>
-<p>
+<h1 class="text-center">Welcome to the Sample App</h1>
+<p class="text-center">
   This is the home page for the
+  <a href="https://github.com/gowda/microlog.phoenix.git">Phoenix Sample App</a>
+  sample application, inspired by <a href="http://www.michaelhartl.com/">Michael Hartl</a>'s
   <a href="http://www.railstutorial.org/">Ruby on Rails Tutorial</a>
-  sample application.
 </p>
+<div class="row justify-content-center">
+  <div class="col-auto">
+    <%= link "Sign up now!", to: "#", class: "btn btn-lg btn-primary" %>
+  </div>
+</div>
