@@ -16,7 +16,12 @@ defmodule MicroLogWeb.Router do
   scope "/", MicroLogWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    # forward?
+    get "/", PageController, :home
+
+    get "/home", PageController, :home
+    get "/help", PageController, :help
+    get "/about", PageController, :about
   end
 
   # Other scopes may use custom stacks.
