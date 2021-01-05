@@ -1,20 +1,18 @@
 # MicroLog
 
-To start your Phoenix server:
+Implementation of [`sample_app`](https://github.com/mhartl/sample_app_3rd_edition) from [Ruby on Rails Tutorial (3rd Ed.)](https://3rd-edition.railstutorial.org/book) using [`phoenix`](https://www.phoenixframework.org/).
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Install Node.js dependencies with `npm install` inside the `assets` directory
-  * Start Phoenix endpoint with `mix phx.server`
+## Development
+### Install dependencies
+```bash
+$ mix deps.get
+$ mix ecto.setup
+$ npm --prefix=assets install
+```
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+### Start server
+```bash
+$ mix phx.server
+```
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Server runs at [`localhost:4000`](http://localhost:4000)
