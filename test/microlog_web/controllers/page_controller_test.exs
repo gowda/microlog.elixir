@@ -20,4 +20,9 @@ defmodule MicroLogWeb.PageControllerTest do
     conn = get(conn, "/about")
     assert html_response(conn, 200) =~ "<title>About | Phoenix Sample App</title>"
   end
+
+  test "GET /contact", %{conn: conn} do
+    conn = get(conn, "/contact")
+    assert html_response(conn, 200) =~ "<title>Contact | Phoenix Sample App</title>"
+  end
 end

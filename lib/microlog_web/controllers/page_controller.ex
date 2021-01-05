@@ -18,4 +18,10 @@ defmodule MicroLogWeb.PageController do
     |> assign(:title, "About")
     |> render("about.html")
   end
+
+  def contact(conn, _params) do
+    conn
+    |> assign(:title, "Contact")
+    |> render("contact.html")
+  end
 end
