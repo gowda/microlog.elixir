@@ -23,6 +23,8 @@ defmodule MicroLogWeb.Router do
     get "/help", PageController, :help
     get "/about", PageController, :about
     get "/contact", PageController, :contact
+
+    resources "/users", UserController
   end
 
   # Other scopes may use custom stacks.
