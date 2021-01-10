@@ -23,6 +23,8 @@ defmodule MicroLogWeb do
 
       import Plug.Conn
       alias MicroLogWeb.Router.Helpers, as: Routes
+
+      import MicroLogWeb.SessionHelper
     end
   end
 

@@ -12,8 +12,7 @@ defmodule MicroLogWeb.SessionController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "Welcome back!")
-        |> put_session(:user_id, user.id)
-        |> configure_session(renew: true)
+        |> login(user)
         |> redirect(to: "/")
 
       {:error, :unauthorized} ->
@@ -28,4 +27,6 @@ defmodule MicroLogWeb.SessionController do
     |> configure_session(drop: true)
     |> redirect(to: "/")
   end
+
+  # needs to go into helper module
 end

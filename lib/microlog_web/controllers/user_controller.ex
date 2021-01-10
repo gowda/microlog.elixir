@@ -19,6 +19,7 @@ defmodule MicroLogWeb.UserController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "Welcome to Phoenix Sample App!")
+        |> login(user)
         |> redirect(to: Routes.user_path(conn, :show, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
