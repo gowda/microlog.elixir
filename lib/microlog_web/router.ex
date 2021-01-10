@@ -24,6 +24,8 @@ defmodule MicroLogWeb.Router do
     get "/about", PageController, :about
     get "/contact", PageController, :contact
 
+    get "/signup", UserController, :new
+
     resources "/users", UserController
   end
 
