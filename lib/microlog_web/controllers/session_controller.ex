@@ -22,4 +22,10 @@ defmodule MicroLogWeb.SessionController do
         |> redirect(to: Routes.session_path(conn, :new))
     end
   end
+
+  def delete(conn, _) do
+    conn
+    |> configure_session(drop: true)
+    |> redirect(to: "/")
+  end
 end

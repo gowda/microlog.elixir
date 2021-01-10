@@ -1,0 +1,49 @@
+<footer class="footer mt-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <%= render "params.html", Map.put(assigns, :params, @conn.params) %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <%= render "headers.html", Map.put(assigns, :headers, headers(@conn)) %>
+      </div>
+    </div>
+    <div class="row align-items-center justify-content-between">
+      <div class="col-auto">
+        <div class="row">
+          <div class="col-auto">
+            <small>
+              <a href="https://hexdocs.pm/phoenix/overview.html">
+                Get started with Phoenix
+              </a>
+            </small>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-auto">
+            <small>
+              This application is inspired by
+              <a href="http://www.michaelhartl.com/">Michael Hartl</a>'s
+              <a href="http://www.railstutorial.org/">Ruby on Rails Tutorial</a>
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <nav>
+          <ul class="list-group list-group-horizontal">
+            <li class="list-group-item"><%= link "About", to: "/about" %></li>
+            <li class="list-group-item"><%= link "Contact", to: "/contact" %></li>
+            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+              <li class="list-group-item">
+                <%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>

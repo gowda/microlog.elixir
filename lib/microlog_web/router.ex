@@ -14,7 +14,7 @@ defmodule MicroLogWeb.Router do
   end
 
   scope "/", MicroLogWeb do
-    pipe_through :browser
+    pipe_through [:browser, :authenticate_user]
 
     # forward?
     get "/", PageController, :home
@@ -28,7 +28,7 @@ defmodule MicroLogWeb.Router do
     get "/login", SessionController, :new
 
     resources "/users", UserController
-    resources "/sessions", SessionController, only: [:create]
+    resources "/sessions", SessionController, only: [:create, :delete], singleton: true
   end
 
   # Other scopes may use custom stacks.
@@ -49,6 +49,16 @@ defmodule MicroLogWeb.Router do
     scope "/" do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: MicroLogWeb.Telemetry
+    end
+  end
+
+  defp authenticate_user(conn, _) do
+    case get_session(conn, :user_id) do
+      nil ->
+        conn
+
+      user_id ->
+        assign(conn, :current_user, MicroLog.Accounts.get_user!(user_id))
     end
   end
 end

@@ -1,0 +1,26 @@
+<header>
+  <nav role="navigation" class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+    <a href="https://github.com/gowda/microlog.elixir.git" class="navbar-brand">
+      Phoenix Sample App
+    </a>
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <%= link "Home", to: "/home", class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link "Help", to: "/help", class: "nav-link" %>
+      </li>
+      <%= if Map.has_key?(@conn.assigns, :current_user) do %>
+        <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+          <li class="nav-item">
+            <%= submit "Logout", to: Routes.session_path(@conn, :delete), class: "nav-link", style: "background-color: transparent; border: none;" %>
+          </li>
+        <% end %>
+      <% else %>
+        <li class="nav-item">
+          <%= link "Login", to: Routes.session_path(@conn, :new), class: "nav-link" %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+</header>
