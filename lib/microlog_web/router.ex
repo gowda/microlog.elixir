@@ -25,8 +25,10 @@ defmodule MicroLogWeb.Router do
     get "/contact", PageController, :contact
 
     get "/signup", UserController, :new
+    get "/login", SessionController, :new
 
     resources "/users", UserController
+    resources "/sessions", SessionController, only: [:create]
   end
 
   # Other scopes may use custom stacks.

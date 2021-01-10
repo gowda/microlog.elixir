@@ -103,6 +103,9 @@ defmodule MicroLog.Accounts do
   end
 
   def authenticate_email_password(email, password) do
-    Repo.get_by(User, email: email, password_digest: User.digest(password))
+    case Repo.get_by(User, email: email, password_digest: User.digest(password)) do
+      %User{} = user -> {:ok, user}
+      _ -> {:error, :unauthorized}
+    end
   end
 end

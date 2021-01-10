@@ -1,0 +1,22 @@
+<%= form_for @conn, "/sessions", [method: :post], fn f -> %>
+  <div class="form-group">
+    <%= label f, :email %>
+    <%= text_input f, :email, class: "form-control shadow-none", autocomplete: "nope", type: "email" %>
+    <%= error_tag f, :email %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :password %>
+    <%= password_input f, :password, class: "form-control shadow-none" %>
+    <%= error_tag f, :password %>
+  </div>
+
+  <div>
+    <%= submit "Log in", class: "btn btn-success shadow-none" %>
+  </div>
+
+  <p>
+    New user?
+    <%= link "Sign up now!", to: Routes.user_path(@conn, :new) %>
+  </p>
+<% end %>
