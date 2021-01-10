@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col">
+    <div class="row">
+      <div class="col">
+        <h4>Params</h4>
+      </div>
+    </div>
+    <dl class="row">
+    <%= for {k, v} <- @params do %>
+      <dt class="col-sm-3"><%= k %><dt>
+      <dd class="col-sm-9"><%= Jason.encode!(v) %></dd>
+    <% end %>
+    </dl>
+  </div>
+</div>

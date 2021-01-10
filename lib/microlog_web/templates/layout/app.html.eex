@@ -35,6 +35,16 @@
       </main>
       <footer class="footer mt-4">
         <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <%= render "params.html", Map.put(assigns, :params, @conn.params) %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <%= render "headers.html", Map.put(assigns, :headers, headers(@conn)) %>
+            </div>
+          </div>
           <div class="row align-items-center justify-content-between">
             <div class="col-auto">
               <div class="row">
