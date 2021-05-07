@@ -104,16 +104,16 @@ defmodule MicroLog.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
 
-    test "authenticate_email_password/2 with invalid email & password returns error changeset" do
-      user = user_fixture()
-
-      refute Accounts.authenticate_email_password("invalid@example.org", "not the password")
+    test "authenticate_email_password/2 with invalid email & password returns error" do
+      assert {:error, :unauthorized} =
+               Accounts.authenticate_email_password("invalid@example.org", "not the password")
     end
 
-    test "authenticate_email_password/2 with valid email & password returns error changeset" do
+    test "authenticate_email_password/2 with valid email & password returns user" do
       user = user_fixture()
 
-      assert Accounts.authenticate_email_password("test@example.org", "password") == user
+      assert {:ok, %User{}} =
+               Accounts.authenticate_email_password(user.email, @valid_attrs[:password])
     end
   end
 end
