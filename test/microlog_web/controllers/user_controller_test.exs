@@ -3,7 +3,12 @@ defmodule MicroLogWeb.UserControllerTest do
 
   alias MicroLog.Accounts
 
-  @create_attrs %{email: "user@example.org", name: "test user name"}
+  @create_attrs %{
+    email: "user@example.org",
+    name: "test user name",
+    password: "password",
+    password_confirmation: "password"
+  }
   @update_attrs %{email: "user.updated@example.org", name: "updated test user name"}
   @invalid_attrs %{email: nil, name: nil}
 
@@ -22,7 +27,7 @@ defmodule MicroLogWeb.UserControllerTest do
   describe "new user" do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :new))
-      assert html_response(conn, 200) =~ "New User"
+      assert html_response(conn, 200) =~ "Sign up"
     end
   end
 
@@ -39,7 +44,7 @@ defmodule MicroLogWeb.UserControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New User"
+      assert html_response(conn, 200) =~ "Sign up"
     end
   end
 
