@@ -11,6 +11,9 @@
         <%= link "Help", to: "/help", class: "nav-link" %>
       </li>
       <%= if Map.has_key?(@conn.assigns, :current_user) do %>
+        <li class="nav-item">
+          <%= link "Settings", to: Routes.user_path(@conn, :edit, @current_user.id), class: "nav-link" %>
+        </li>
         <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
           <li class="nav-item">
             <%= submit "Logout", to: Routes.session_path(@conn, :delete), class: "nav-link", style: "background-color: transparent; border: none;" %>

@@ -53,7 +53,7 @@ defmodule MicroLogWeb.UserControllerTest do
 
     test "renders form for editing chosen user", %{conn: conn, user: user} do
       conn = get(conn, Routes.user_path(conn, :edit, user))
-      assert html_response(conn, 200) =~ "Edit User"
+      assert html_response(conn, 200) =~ "Update your profile"
     end
   end
 
@@ -72,12 +72,12 @@ defmodule MicroLogWeb.UserControllerTest do
 
     test "renders error when attempted to update email", %{conn: conn, user: user} do
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
-      assert html_response(conn, 200) =~ "Edit User"
+      assert html_response(conn, 200) =~ "Update your profile"
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
       conn = put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
-      assert html_response(conn, 200) =~ "Edit User"
+      assert html_response(conn, 200) =~ "Update your profile"
     end
   end
 
