@@ -1,4 +1,6 @@
 defmodule MicroLogWeb.SessionHelper do
+  @moduledoc false
+
   import Plug.Conn
 
   def login(conn, user) do
