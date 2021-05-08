@@ -12,7 +12,7 @@ defmodule MicroLogWeb.ErrorHelpers do
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
       content_tag(
         :span,
-        "#{Atom.to_string(field) |> String.capitalize()} #{translate_error(error)}",
+        "#{field_name(field)} #{translate_error(error)}",
         class: "form-text text-danger",
         phx_feedback_for: input_id(form, field)
       )
@@ -28,5 +28,15 @@ defmodule MicroLogWeb.ErrorHelpers do
     Enum.reduce(opts, msg, fn {key, value}, acc ->
       String.replace(acc, "%{#{key}}", to_string(value))
     end)
+  end
+
+  @doc """
+  Generate name from label
+  """
+  def field_name(field) do
+    case field do
+      :password_confirmation -> "Password confirmation"
+      _ -> "#{Atom.to_string(field) |> String.capitalize()}"
+    end
   end
 end
