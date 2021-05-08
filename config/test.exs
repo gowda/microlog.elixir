@@ -16,10 +16,12 @@ config :microlog, MicroLog.Repo,
 # you can enable the server option below.
 config :microlog, MicroLogWeb.Endpoint,
   http: [port: 4002],
-  server: false
+  server: true
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :microlog, :sandbox, Ecto.Adapters.SQL.Sandbox
 
 config :wallaby, driver: Wallaby.Chrome, chromedriver: [headless: true]
 config :wallaby, otp_app: :microlog
