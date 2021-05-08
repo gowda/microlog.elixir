@@ -27,6 +27,4 @@ defmodule MicroLogWeb.SessionController do
     |> configure_session(drop: true)
     |> redirect(to: "/")
   end
-
-  # needs to go into helper module
 end
