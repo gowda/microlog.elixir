@@ -1,7 +1,6 @@
 defmodule MicroLog.UserSignupTest do
   use ExUnit.Case, async: true
   use Wallaby.Feature
-  # use Wallaby.DSL
 
   feature "form has fields", %{session: session} do
     session

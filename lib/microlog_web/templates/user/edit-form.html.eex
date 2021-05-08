@@ -17,18 +17,6 @@
     <%= error_tag f, :email %>
   </div>
 
-  <div class="form-group">
-    <%= label f, :password %>
-    <%= password_input f, :password, class: "form-control shadow-none" %>
-    <%= error_tag f, :password %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :password_confirmation %>
-    <%= password_input f, :password_confirmation, class: "form-control shadow-none" %>
-    <%= error_tag f, :password_confirmation %>
-  </div>
-
   <div>
     <%= submit "Save changes", class: "btn btn-primary shadow-none" %>
   </div>

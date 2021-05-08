@@ -44,7 +44,7 @@ defmodule MicroLogWeb.UserController do
     case Accounts.update_user(user, user_params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "User updated successfully.")
+        |> put_flash(:info, "Profile updated successfully.")
         |> redirect(to: Routes.user_path(conn, :show, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
