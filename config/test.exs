@@ -20,3 +20,7 @@ config :microlog, MicroLogWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :wallaby, driver: Wallaby.Chrome, chromedriver: [headless: true]
+config :wallaby, otp_app: :microlog
+config :wallaby, screenshot_on_failure: true

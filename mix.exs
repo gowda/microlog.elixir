@@ -44,7 +44,8 @@ defmodule MicroLog.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:wallaby, "~> 0.28.0", only: :test, runtime: false}
     ]
   end
 

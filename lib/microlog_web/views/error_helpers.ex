@@ -10,7 +10,9 @@ defmodule MicroLogWeb.ErrorHelpers do
   """
   def error_tag(form, field) do
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
-      content_tag(:span, translate_error(error),
+      content_tag(
+        :span,
+        "#{Atom.to_string(field) |> String.capitalize()} #{translate_error(error)}",
         class: "form-text text-danger",
         phx_feedback_for: input_id(form, field)
       )
