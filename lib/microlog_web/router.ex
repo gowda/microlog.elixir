@@ -27,8 +27,14 @@ defmodule MicroLogWeb.Router do
     get "/signup", UserController, :new
     get "/login", SessionController, :new
 
-    resources "/users", UserController
+    resources "/users", UserController, only: [:create]
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
+  end
+
+  scope "/", MicroLogWeb do
+    pipe_through [:browser, :authenticate_user, :require_authentication]
+
+    resources "/users", UserController, except: [:create]
   end
 
   # Other scopes may use custom stacks.
@@ -59,6 +65,19 @@ defmodule MicroLogWeb.Router do
 
       user_id ->
         assign(conn, :current_user, MicroLog.Accounts.get_user!(user_id))
+    end
+  end
+
+  def require_authentication(conn, _) do
+    case Map.get(conn.assigns, :current_user) do
+      %MicroLog.Accounts.User{} ->
+        conn
+
+      _ ->
+        conn
+        |> put_flash(:info, "Please login to access this page.")
+        |> redirect(to: "/login")
+        |> halt
     end
   end
 end

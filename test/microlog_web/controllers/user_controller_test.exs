@@ -18,8 +18,14 @@ defmodule MicroLogWeb.UserControllerTest do
   end
 
   describe "index" do
-    test "lists all users", %{conn: conn} do
-      conn = get(conn, Routes.user_path(conn, :index))
+    setup [:create_user]
+
+    test "lists all users", %{conn: conn, user: user} do
+      conn =
+        conn
+        |> assign(:current_user, user)
+        |> get(Routes.user_path(conn, :index))
+
       assert html_response(conn, 200) =~ "Listing Users"
     end
   end
@@ -51,11 +57,11 @@ defmodule MicroLogWeb.UserControllerTest do
   describe "update user" do
     setup [:create_user]
 
-    test "returns 401 when not logged in", %{conn: conn, user: user} do
+    test "redirects to login path when not logged in", %{conn: conn, user: user} do
       conn =
         put(conn, Routes.user_path(conn, :update, user), user: %{name: "updated test user name"})
 
-      assert html_response(conn, 401) =~ "You should be logged in to update profile"
+      assert redirected_to(conn) == "/login"
     end
 
     test "redirects when data is valid", %{conn: conn, user: user} do
@@ -65,9 +71,6 @@ defmodule MicroLogWeb.UserControllerTest do
         |> put(Routes.user_path(conn, :update, user), user: %{name: "updated test user name"})
 
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
-
-      conn = get(conn, Routes.user_path(conn, :show, user))
-      assert html_response(conn, 200) =~ "updated test user name"
     end
 
     test "renders error when attempted to update email", %{conn: conn, user: user} do
@@ -92,13 +95,21 @@ defmodule MicroLogWeb.UserControllerTest do
   describe "delete user" do
     setup [:create_user]
 
-    test "deletes chosen user", %{conn: conn, user: user} do
+    test "redirects to login path when not logged in", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
+
+      assert redirected_to(conn) == "/login"
+    end
+
+    test "deletes chosen user", %{conn: conn, user: user} do
+      conn =
+        conn
+        |> assign(:current_user, user)
+        |> delete(Routes.user_path(conn, :delete, user))
+
       assert redirected_to(conn) == Routes.user_path(conn, :index)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
-      end
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
     end
   end
 
