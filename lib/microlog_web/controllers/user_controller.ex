@@ -33,22 +33,40 @@ defmodule MicroLogWeb.UserController do
   end
 
   def edit(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-    changeset = Accounts.change_user(user)
-    render(conn, "edit.html", user: user, changeset: changeset)
+    case Map.get(conn.assigns, :current_user) do
+      %User{} ->
+        user = Accounts.get_user!(id)
+        changeset = Accounts.change_user(user)
+        render(conn, "edit.html", user: user, changeset: changeset)
+
+      _ ->
+        conn
+        |> put_flash(:info, "Please login to access this page.")
+        |> redirect(to: "/login")
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Accounts.get_user!(id)
+    case Map.get(conn.assigns, :current_user) do
+      %User{} ->
+        user = Accounts.get_user!(id)
 
-    case Accounts.update_user(user, user_params) do
-      {:ok, user} ->
+        case Accounts.update_user(user, user_params) do
+          {:ok, user} ->
+            conn
+            |> put_flash(:info, "Profile updated successfully.")
+            |> redirect(to: Routes.user_path(conn, :show, user))
+
+          {:error, %Ecto.Changeset{} = changeset} ->
+            render(conn, "edit.html", user: user, changeset: changeset)
+        end
+
+      _ ->
         conn
-        |> put_flash(:info, "Profile updated successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", user: user, changeset: changeset)
+        |> put_flash(:info, "You should be logged in to update profile")
+        |> put_status(401)
+        |> put_view(MicroLogWeb.SessionView)
+        |> render("new.html")
     end
   end
 

@@ -48,21 +48,21 @@ defmodule MicroLogWeb.UserControllerTest do
     end
   end
 
-  describe "edit user" do
-    setup [:create_user]
-
-    test "renders form for editing chosen user", %{conn: conn, user: user} do
-      conn = get(conn, Routes.user_path(conn, :edit, user))
-      assert html_response(conn, 200) =~ "Update your profile"
-    end
-  end
-
   describe "update user" do
     setup [:create_user]
 
-    test "redirects when data is valid", %{conn: conn, user: user} do
+    test "returns 401 when not logged in", %{conn: conn, user: user} do
       conn =
         put(conn, Routes.user_path(conn, :update, user), user: %{name: "updated test user name"})
+
+      assert html_response(conn, 401) =~ "You should be logged in to update profile"
+    end
+
+    test "redirects when data is valid", %{conn: conn, user: user} do
+      conn =
+        conn
+        |> assign(:current_user, user)
+        |> put(Routes.user_path(conn, :update, user), user: %{name: "updated test user name"})
 
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
 
@@ -71,12 +71,20 @@ defmodule MicroLogWeb.UserControllerTest do
     end
 
     test "renders error when attempted to update email", %{conn: conn, user: user} do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
+      conn =
+        conn
+        |> assign(:current_user, user)
+        |> put(Routes.user_path(conn, :update, user), user: @update_attrs)
+
       assert html_response(conn, 200) =~ "Update your profile"
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
+      conn =
+        conn
+        |> assign(:current_user, user)
+        |> put(Routes.user_path(conn, :update, user), user: @invalid_attrs)
+
       assert html_response(conn, 200) =~ "Update your profile"
     end
   end

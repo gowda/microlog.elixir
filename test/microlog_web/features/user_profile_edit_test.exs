@@ -14,11 +14,26 @@ defmodule MicroLog.UserProfileEditTest do
     user
   end
 
-  feature "form has fields", %{session: session} do
+  feature "redirects to login page when not logged in", %{session: session} do
     user = fixture(:user)
 
     session
     |> visit("/users/#{user.id}/edit")
+    |> assert_has(Query.text("Please login to access this page"))
+    |> assert_has(Query.fillable_field("email"))
+    |> assert_has(Query.fillable_field("password"))
+    |> assert_has(Query.button("Log in"))
+  end
+
+  feature "form has fields", %{session: session} do
+    user = fixture(:user)
+
+    session
+    |> visit("/login")
+    |> fill_in(Query.fillable_field("email"), with: user.email)
+    |> fill_in(Query.fillable_field("password"), with: "password")
+    |> click(Query.button("Log in"))
+    |> click(Query.link("Settings"))
     |> assert_has(Query.text("Update your profile"))
     |> assert_has(Query.fillable_field("user[name]"))
     |> assert_has(Query.fillable_field("user[email]"))
@@ -29,7 +44,8 @@ defmodule MicroLog.UserProfileEditTest do
     user = fixture(:user)
 
     session
-    |> visit("/users/#{user.id}/edit")
+    |> login(user)
+    |> click(Query.link("Settings"))
     |> clear(Query.fillable_field("user[name]"))
     |> clear(Query.fillable_field("user[email]"))
     |> click(Query.button("Save changes"))
@@ -41,7 +57,8 @@ defmodule MicroLog.UserProfileEditTest do
     user = fixture(:user)
 
     session
-    |> visit("/users/#{user.id}/edit")
+    |> login(user)
+    |> click(Query.link("Settings"))
     |> clear(Query.fillable_field("user[email]"))
     |> fill_in(Query.fillable_field("user[email]"), with: "updated.user@example.org")
     |> click(Query.button("Save changes"))
@@ -53,9 +70,18 @@ defmodule MicroLog.UserProfileEditTest do
     user = fixture(:user)
 
     session
-    |> visit("/users/#{user.id}/edit")
+    |> login(user)
+    |> click(Query.link("Settings"))
     |> fill_in(Query.text_field("user[name]"), with: "Updated test user name")
     |> click(Query.button("Save changes"))
     |> assert_has(Query.text("Profile updated successfully."))
+  end
+
+  def login(session, user) do
+    session
+    |> visit("/login")
+    |> fill_in(Query.fillable_field("email"), with: user.email)
+    |> fill_in(Query.fillable_field("password"), with: "password")
+    |> click(Query.button("Log in"))
   end
 end
