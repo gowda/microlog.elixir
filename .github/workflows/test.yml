@@ -35,4 +35,4 @@ jobs:
             ${{ runner.os }}-mix-deps-
             ${{ runner.os }}-
       - run: mix deps.get
-      - run: mix test
+      - run: mix test --cover
