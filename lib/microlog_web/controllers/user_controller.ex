@@ -34,30 +34,50 @@ defmodule MicroLogWeb.UserController do
 
   def edit(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
-    changeset = Accounts.change_user(user)
-    render(conn, "edit.html", user: user, changeset: changeset)
+
+    if user == Map.get(conn.assigns, :current_user) do
+      changeset = Accounts.change_user(user)
+      render(conn, "edit.html", user: user, changeset: changeset)
+    else
+      conn
+      |> put_flash(:info, "You cannot edit profile for other users.")
+      |> redirect(to: "/")
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user!(id)
 
-    case Accounts.update_user(user, user_params) do
-      {:ok, user} ->
-        conn
-        |> put_flash(:info, "Profile updated successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+    if user == Map.get(conn.assigns, :current_user) do
+      case Accounts.update_user(user, user_params) do
+        {:ok, user} ->
+          conn
+          |> put_flash(:info, "Profile updated successfully.")
+          |> redirect(to: Routes.user_path(conn, :show, user))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", user: user, changeset: changeset)
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html", user: user, changeset: changeset)
+      end
+    else
+      conn
+      |> put_flash(:info, "You cannot edit profile for other users.")
+      |> redirect(to: "/")
     end
   end
 
   def delete(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
-    {:ok, _user} = Accounts.delete_user(user)
 
-    conn
-    |> put_flash(:info, "User deleted successfully.")
-    |> redirect(to: Routes.user_path(conn, :index))
+    if user == Map.get(conn.assigns, :current_user) do
+      {:ok, _user} = Accounts.delete_user(user)
+
+      conn
+      |> put_flash(:info, "User deleted successfully.")
+      |> redirect(to: Routes.user_path(conn, :index))
+    else
+      conn
+      |> put_flash(:info, "You cannot delete other users.")
+      |> redirect(to: "/")
+    end
   end
 end

@@ -3,7 +3,7 @@ defmodule MicroLog.UserProfileEditTest do
   use Wallaby.Feature
 
   describe "profile" do
-    setup [:create_user]
+    setup [:create_user, :create_other_user]
 
     feature "redirects to login page when not logged in", %{session: session, user: user} do
       session
@@ -12,6 +12,17 @@ defmodule MicroLog.UserProfileEditTest do
       |> assert_has(Query.fillable_field("email"))
       |> assert_has(Query.fillable_field("password"))
       |> assert_has(Query.button("Log in"))
+    end
+
+    feature "redirects to home page when logged in as wrong user", %{
+      session: session,
+      user: user,
+      other_user: other_user
+    } do
+      session
+      |> login(other_user)
+      |> visit("/users/#{user.id}/edit")
+      |> assert_has(Query.text("You cannot edit profile for other users."))
     end
 
     feature "form has fields", %{session: session, user: user} do
@@ -77,5 +88,17 @@ defmodule MicroLog.UserProfileEditTest do
       })
 
     %{user: user}
+  end
+
+  defp create_other_user(_) do
+    {:ok, user} =
+      MicroLog.Accounts.create_user(%{
+        email: "other.user@example.org",
+        name: "other test user name",
+        password: "password",
+        password_confirmation: "password"
+      })
+
+    %{other_user: user}
   end
 end

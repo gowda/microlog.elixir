@@ -18,7 +18,7 @@ defmodule MicroLogWeb.UserControllerTest do
   end
 
   describe "index" do
-    setup [:create_user]
+    setup [:create_user, :create_other_user]
 
     test "lists all users", %{conn: conn, user: user} do
       conn =
@@ -55,13 +55,26 @@ defmodule MicroLogWeb.UserControllerTest do
   end
 
   describe "update user" do
-    setup [:create_user]
+    setup [:create_user, :create_other_user]
 
     test "redirects to login path when not logged in", %{conn: conn, user: user} do
       conn =
         put(conn, Routes.user_path(conn, :update, user), user: %{name: "updated test user name"})
 
       assert redirected_to(conn) == "/login"
+    end
+
+    test "redirects to home when logged in as different user", %{
+      conn: conn,
+      user: user,
+      other_user: other_user
+    } do
+      conn =
+        conn
+        |> assign(:current_user, other_user)
+        |> put(Routes.user_path(conn, :update, user), user: %{name: "updated test user name"})
+
+      assert redirected_to(conn) == "/"
     end
 
     test "redirects when data is valid", %{conn: conn, user: user} do
@@ -93,12 +106,25 @@ defmodule MicroLogWeb.UserControllerTest do
   end
 
   describe "delete user" do
-    setup [:create_user]
+    setup [:create_user, :create_other_user]
 
     test "redirects to login path when not logged in", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
 
       assert redirected_to(conn) == "/login"
+    end
+
+    test "redirects to home when logged in as different user", %{
+      conn: conn,
+      user: user,
+      other_user: other_user
+    } do
+      conn =
+        conn
+        |> assign(:current_user, other_user)
+        |> delete(Routes.user_path(conn, :delete, user))
+
+      assert redirected_to(conn) == "/"
     end
 
     test "deletes chosen user", %{conn: conn, user: user} do
@@ -116,5 +142,17 @@ defmodule MicroLogWeb.UserControllerTest do
   defp create_user(_) do
     user = fixture(:user)
     %{user: user}
+  end
+
+  defp create_other_user(_) do
+    {:ok, user} =
+      Accounts.create_user(%{
+        email: "other.user@example.org",
+        name: "other test user name",
+        password: "password",
+        password_confirmation: "password"
+      })
+
+    %{other_user: user}
   end
 end
