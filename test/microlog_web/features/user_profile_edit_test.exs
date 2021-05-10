@@ -3,7 +3,7 @@ defmodule MicroLog.UserProfileEditTest do
   use Wallaby.Feature
 
   describe "profile" do
-    setup [:create_user, :create_other_user]
+    setup [:create_user, :create_other_user, :create_admin]
 
     feature "redirects to login page when not logged in", %{session: session, user: user} do
       session
@@ -28,10 +28,23 @@ defmodule MicroLog.UserProfileEditTest do
     feature "form has fields", %{session: session, user: user} do
       session
       |> visit("/login")
-      |> fill_in(Query.fillable_field("email"), with: user.email)
-      |> fill_in(Query.fillable_field("password"), with: "password")
-      |> click(Query.button("Log in"))
+      |> login(user)
       |> click(Query.link("Settings"))
+      |> assert_has(Query.text("Update your profile"))
+      |> assert_has(Query.fillable_field("user[name]"))
+      |> assert_has(Query.fillable_field("user[email]"))
+      |> assert_has(Query.button("Save changes"))
+    end
+
+    feature "form has fields when logged in as admin", %{
+      session: session,
+      user: user,
+      admin: admin
+    } do
+      session
+      |> visit("/login")
+      |> login(admin)
+      |> visit("/users/#{user.id}/edit")
       |> assert_has(Query.text("Update your profile"))
       |> assert_has(Query.fillable_field("user[name]"))
       |> assert_has(Query.fillable_field("user[email]"))
@@ -100,5 +113,18 @@ defmodule MicroLog.UserProfileEditTest do
       })
 
     %{other_user: user}
+  end
+
+  defp create_admin(_) do
+    {:ok, user} =
+      MicroLog.Accounts.create_user(%{
+        email: "admin.user@example.org",
+        name: "test admin name",
+        password: "password",
+        password_confirmation: "password",
+        admin: true
+      })
+
+    %{admin: user}
   end
 end

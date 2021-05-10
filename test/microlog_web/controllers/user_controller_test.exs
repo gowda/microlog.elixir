@@ -70,7 +70,7 @@ defmodule MicroLogWeb.UserControllerTest do
   end
 
   describe "update user" do
-    setup [:create_user, :create_other_user]
+    setup [:create_user, :create_other_user, :create_admin]
 
     test "redirects to login path when not logged in", %{conn: conn, user: user} do
       conn =
@@ -101,6 +101,15 @@ defmodule MicroLogWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
     end
 
+    test "redirects when data is valid for admin", %{conn: conn, user: user, admin: admin} do
+      conn =
+        conn
+        |> assign(:current_user, admin)
+        |> put(Routes.user_path(conn, :update, user), user: %{name: "updated test user name"})
+
+      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
+    end
+
     test "renders error when attempted to update email", %{conn: conn, user: user} do
       conn =
         conn
@@ -121,7 +130,7 @@ defmodule MicroLogWeb.UserControllerTest do
   end
 
   describe "delete user" do
-    setup [:create_user, :create_other_user]
+    setup [:create_user, :create_other_user, :create_admin]
 
     test "redirects to login path when not logged in", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
@@ -146,6 +155,17 @@ defmodule MicroLogWeb.UserControllerTest do
       conn =
         conn
         |> assign(:current_user, user)
+        |> delete(Routes.user_path(conn, :delete, user))
+
+      assert redirected_to(conn) == Routes.user_path(conn, :index)
+
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
+    end
+
+    test "deletes chosen user when logged in as admin", %{conn: conn, user: user, admin: admin} do
+      conn =
+        conn
+        |> assign(:current_user, admin)
         |> delete(Routes.user_path(conn, :delete, user))
 
       assert redirected_to(conn) == Routes.user_path(conn, :index)

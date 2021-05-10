@@ -41,20 +41,22 @@ defmodule MicroLogWeb.UserController do
   def edit(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
 
-    if user == Map.get(conn.assigns, :current_user) do
-      changeset = Accounts.change_user(user)
-      render(conn, "edit.html", user: user, changeset: changeset)
-    else
-      conn
-      |> put_flash(:info, "You cannot edit profile for other users.")
-      |> redirect(to: "/")
+    case authorize_edit(conn, user) do
+      true ->
+        changeset = Accounts.change_user(user)
+        render(conn, "edit.html", user: user, changeset: changeset)
+
+      _ ->
+        conn
+        |> put_flash(:info, "You cannot edit profile for other users.")
+        |> redirect(to: "/")
     end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user!(id)
 
-    if user == Map.get(conn.assigns, :current_user) do
+    if authorize_edit(conn, user) do
       case Accounts.update_user(user, user_params) do
         {:ok, user} ->
           conn
@@ -74,7 +76,7 @@ defmodule MicroLogWeb.UserController do
   def delete(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
 
-    if user == Map.get(conn.assigns, :current_user) do
+    if authorize_delete(conn, user) do
       {:ok, _user} = Accounts.delete_user(user)
 
       conn
@@ -85,5 +87,13 @@ defmodule MicroLogWeb.UserController do
       |> put_flash(:info, "You cannot delete other users.")
       |> redirect(to: "/")
     end
+  end
+
+  defp authorize_edit(conn, resource) do
+    conn.assigns.current_user.admin || conn.assigns.current_user == resource
+  end
+
+  defp authorize_delete(conn, resource) do
+    authorize_edit(conn, resource)
   end
 end
