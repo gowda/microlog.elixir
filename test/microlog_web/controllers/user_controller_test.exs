@@ -18,12 +18,27 @@ defmodule MicroLogWeb.UserControllerTest do
   end
 
   describe "index" do
-    setup [:create_user, :create_other_user]
+    setup [:create_user, :create_admin]
 
-    test "lists all users", %{conn: conn, user: user} do
+    test "redirects to login path when not logged in", %{conn: conn} do
+      conn = get(conn, Routes.user_path(conn, :index))
+
+      assert redirected_to(conn) =~ "/login"
+    end
+
+    test "redirects to home when not admin", %{conn: conn, user: user} do
       conn =
         conn
         |> assign(:current_user, user)
+        |> get(Routes.user_path(conn, :index))
+
+      assert redirected_to(conn) =~ "/"
+    end
+
+    test "lists all users for admin", %{conn: conn, admin: admin} do
+      conn =
+        conn
+        |> assign(:current_user, admin)
         |> get(Routes.user_path(conn, :index))
 
       assert html_response(conn, 200) =~ "Listing Users"
@@ -154,5 +169,18 @@ defmodule MicroLogWeb.UserControllerTest do
       })
 
     %{other_user: user}
+  end
+
+  defp create_admin(_) do
+    {:ok, user} =
+      Accounts.create_user(%{
+        email: "admin.user@example.org",
+        name: "test admin name",
+        password: "password",
+        password_confirmation: "password",
+        admin: true
+      })
+
+    %{admin: user}
   end
 end

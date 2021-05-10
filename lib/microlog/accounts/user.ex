@@ -9,6 +9,7 @@ defmodule MicroLog.Accounts.User do
     field :name, :string
     field :password, :string, virtual: true, redact: true
     field :password_digest, :string, redact: true
+    field :admin, :boolean, default: false
 
     timestamps()
   end
@@ -16,7 +17,7 @@ defmodule MicroLog.Accounts.User do
   @doc false
   def changeset_for_update(user, attrs) do
     user
-    |> cast(attrs, [:name, :email])
+    |> cast(attrs, [:name, :email, :admin])
     |> validate_change(:email, fn _, _ -> [email: "cannot be updated"] end)
     |> validate_required([:name])
   end
@@ -24,7 +25,7 @@ defmodule MicroLog.Accounts.User do
   @doc false
   def changeset_for_create(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :password])
+    |> cast(attrs, [:name, :email, :password, :admin])
     |> validate_required([:name, :email, :password])
     |> validate_format(:email, ~r/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i)
     |> unique_constraint(:email)
