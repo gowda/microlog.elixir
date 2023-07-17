@@ -10,7 +10,14 @@ Implementation of [`sample_app`](https://github.com/mhartl/sample_app_3rd_editio
 ```bash
 $ mix deps.get
 $ mix ecto.setup
-$ npm --prefix=assets install
+```
+
+Assets can be built using `node-14` (`lts/fermium`) with `python3.10`
+
+```bash
+$ nvm install --lts lts/fermium
+$ nvm use lts/fermium
+$ PYTHON=$(which python3.10) npm --prefix=assets install
 ```
 
 ### Lint

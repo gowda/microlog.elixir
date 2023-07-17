@@ -2,8 +2,8 @@ use Mix.Config
 
 # Configure your database
 config :microlog, MicroLog.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "microloggerex",
+  password: "microloggerex",
   database: "microlog_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
