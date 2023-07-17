@@ -3,7 +3,7 @@ name: test
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-20.04
     # https://stackoverflow.com/a/61721608/1993020
     services:
